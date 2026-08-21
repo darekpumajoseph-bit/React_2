@@ -1,50 +1,89 @@
-import React from 'react';
-import CardAccion from './CardAccion';
+import React, { useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 
-export interface RegistroProps {
-  onAccionModulo: (modulo: string, accion: string) => void;
+interface RegistroData {
+  nombre: string;
+  documento: string;
+  telefono: string;
+  rol: string;
 }
 
-const Registro: React.FC<RegistroProps> = ({ onAccionModulo }) => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const nombre = formData.get('nombre') as string;
-    const correo = formData.get('correo') as string;
-    const contrasena = formData.get('contrasena') as string;
+export const Registro: React.FC = () => {
+  const [nombre, setNombre] = useState<string>('');
+  const [documento, setDocumento] = useState<string>('');
+  const [telefono, setTelefono] = useState<string>('');
+  const [rol, setRol] = useState<string>('Paciente');
+  const [registroExitoso, setRegistroExitoso] = useState<RegistroData | null>(null);
 
-    alert(`[REGISTRO EXITOSO]\nNombre: ${nombre}\nCorreo: ${correo}\nContraseña: ${contrasena}`);
+  const handleRegister = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const datos: RegistroData = { nombre, documento, telefono, rol };
+    setRegistroExitoso(datos);
+
+    setNombre('');
+    setDocumento('');
+    setTelefono('');
   };
 
   return (
-    <div className="page-container">
-      <div className="page-header">
-        <h2>📝 Registro de Personal</h2>
-      </div>
+    <div className="card">
+      <h2>Registro de Usuarios / Pacientes</h2>
+      <form onSubmit={handleRegister}>
+        <div className="form-group">
+          <label>Nombre Completo:</label>
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setNombre(e.target.value)}
+            required
+          />
+        </div>
 
-      <form onSubmit={handleSubmit} className="recent-section" style={{ maxWidth: '400px', marginBottom: '1.5rem' }}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Nombre Completo:</label>
-          <input type="text" name="nombre" required style={{ width: '100%', padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+        <div className="form-group">
+          <label>Documento de Identidad:</label>
+          <input
+            type="text"
+            value={documento}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setDocumento(e.target.value)}
+            required
+          />
         </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Correo Electrónico:</label>
-          <input type="email" name="correo" required style={{ width: '100%', padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+
+        <div className="form-group">
+          <label>Teléfono de Contacto:</label>
+          <input
+            type="tel"
+            value={telefono}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setTelefono(e.target.value)}
+            required
+          />
         </div>
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Contraseña:</label>
-          <input type="password" name="contrasena" required style={{ width: '100%', padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }} />
+
+        <div className="form-group">
+          <label>Rol:</label>
+          <select 
+            value={rol} 
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => setRol(e.target.value)}
+          >
+            <option value="Paciente">Paciente</option>
+            <option value="Odontólogo">Odontólogo</option>
+            <option value="Recepcionista">Recepcionista</option>
+          </select>
         </div>
-        <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Crear Cuenta</button>
+
+        <button type="submit" className="btn-primary">Registrar Usuario</button>
       </form>
 
-      <CardAccion 
-        titulo="Políticas del Sistema"
-        descripcion="Aceptación de normativas internas del sistema OdontoSoft."
-        textoBoton="Aceptar Políticas"
-        modulo="Registro"
-        onEjecutarAccion={onAccionModulo}
-      />
+      {/* Visualización de datos enviados */}
+      {registroExitoso && (
+        <div className="preview-data">
+          <h3>Último Usuario Registrado:</h3>
+          <p><strong>Nombre:</strong> {registroExitoso.nombre}</p>
+          <p><strong>Documento:</strong> {registroExitoso.documento}</p>
+          <p><strong>Teléfono:</strong> {registroExitoso.telefono}</p>
+          <p><strong>Rol:</strong> {registroExitoso.rol}</p>
+        </div>
+      )}
     </div>
   );
 };

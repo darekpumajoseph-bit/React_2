@@ -1,71 +1,49 @@
-import React from 'react';
-import CardAccion from './CardAccion';
+import React, { useState } from 'react';
+import type { ChangeEvent } from 'react';
 
-export interface Usuario {
-  id: number;
-  nombre: string;
-  email: string;
-  rol: string;
-  estado: "Activo" | "Inactivo";
-}
+export const Usuarios: React.FC = () => {
+  const [filtro, setFiltro] = useState<string>('');
+  const [contadorActivos, setContadorActivos] = useState<number>(3);
 
-export interface UsuariosProps {
-  onAccionModulo: (modulo: string, accion: string) => void;
-}
-
-const Usuarios: React.FC<UsuariosProps> = ({ onAccionModulo }) => {
-  const usuarios: Usuario[] = [
-    { id: 1, nombre: "Dra. María Pérez", email: "maria@odontosoft.com", rol: "Odontóloga", estado: "Activo" },
-    { id: 2, nombre: "Dr. Carlos Gómez", email: "carlos@odontosoft.com", rol: "Odontólogo", estado: "Activo" },
-    { id: 3, nombre: "Laura Martínez", email: "laura@odontosoft.com", rol: "Asistente", estado: "Activo" },
-    { id: 4, nombre: "Pedro Ramírez", email: "pedro@odontosoft.com", rol: "Recepcionista", estado: "Inactivo" },
+  const usuariosIniciales = [
+    { id: 1, nombre: 'Carlos Mendoza', rol: 'Odontólogo General' },
+    { id: 2, nombre: 'Ana Gómez', rol: 'Higienista Dental' },
+    { id: 3, nombre: 'Laura Ruiz', rol: 'Recepcionista' },
   ];
 
   return (
-    <div className="page-container">
-      <div className="page-header">
-        <div>
-          <h2>👥 Usuarios del Sistema</h2>
-          <p className="subtitle">Gestión de usuarios y personal odontológico</p>
-        </div>
+    <div className="card">
+      <h2>Directorio de Personal ({contadorActivos} activos)</h2>
+      
+      <div className="form-group">
+        <label>Buscar Personal por Nombre:</label>
+        <input
+          type="text"
+          value={filtro}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setFiltro(e.target.value)}
+          placeholder="Escriba para filtrar..."
+        />
       </div>
 
-      <div className="table-container">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuarios.map((usuario) => (
-              <tr key={usuario.id}>
-                <td>{usuario.id}</td>
-                <td><strong>{usuario.nombre}</strong></td>
-                <td>{usuario.email}</td>
-                <td><span className="rol-badge">{usuario.rol}</span></td>
-                <td>
-                  <span className={`status-badge ${usuario.estado === "Activo" ? "status-activo" : "status-inactivo"}`}>
-                    {usuario.estado}
-                  </span>
-                </td>
-              </tr>
+      <div className="preview-data">
+        <h3>Lista de Usuarios</h3>
+        <ul>
+          {usuariosIniciales
+            .filter((u) => u.nombre.toLowerCase().includes(filtro.toLowerCase()))
+            .map((u) => (
+              <li key={u.id}>
+                <strong>{u.nombre}</strong> - {u.rol}
+              </li>
             ))}
-          </tbody>
-        </table>
+        </ul>
       </div>
 
-      <CardAccion 
-        titulo="Crear Nuevo Usuario"
-        descripcion="Permite agregar un nuevo profesional al sistema OdontoSoft."
-        textoBoton="Registrar Usuario"
-        modulo="Usuarios"
-        onEjecutarAccion={onAccionModulo}
-      />
+      <button 
+        className="btn-secondary"
+        onClick={() => setContadorActivos(contadorActivos + 1)}
+      >
+        Simular Nuevo Personal Activo (+1)
+      </button>
     </div>
   );
 };
