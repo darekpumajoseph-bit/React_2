@@ -1,5 +1,5 @@
 {
-  "name": "padre-hijo",
+  "name": "odontosoft-actividad-3",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "axios": "^1.11.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
